@@ -3,13 +3,10 @@ package ca2;
  *
  * @author N00181859
  */
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
-import utils.Rangedrandom;
+import utils.DatabasePopulator;
 public class CA2 {
     public static void main(String[] args) {
-        //Store, one to many testing:
-        
+        DatabasePopulator dbPop = new DatabasePopulator();
+        dbPop.populate(10,10);
     }
 }
