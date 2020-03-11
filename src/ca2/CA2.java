@@ -7,6 +7,7 @@ import utils.DatabasePopulator;
 public class CA2 {
     public static void main(String[] args) {
         DatabasePopulator dbPop = new DatabasePopulator();
-        dbPop.populate(10,10);
+        dbPop.printBA(10);
+        dbPop.printBikes(20);
     }
 }

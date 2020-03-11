@@ -11,9 +11,6 @@ import java.util.Random;
  * @author N00181859
  */
 public class DatabasePopulator {
-    
-    //todo fix this
-    
     //Random object
     private final Random ROBJ = new Random();
 
@@ -24,10 +21,11 @@ public class DatabasePopulator {
     private final String productType[] = {"Customizable", "Bike sticker", "Parts", "Tools", "Misc"};
     private final String brands[] = {"Zoltec", "Pinarello", "BMC", "Trek", "Specialized", "Raleigh", "GT", "Focus", "Cannondale", "Cervelo", "Diamondback", "Kona",};
 
-    //Condensed random object generator
-    public void populate(int desBA, int desB){
+
+    public List<BicycleAccessories> genBA(int desBA){
         //Create ArrayLists and add desired amount of entries to it
         List<BicycleAccessories> baObjArray = new ArrayList<>();
+        //Condensed object generator
         for(int i = 1; i < desBA+1; ++i){
             baObjArray.add(new BicycleAccessories(i
                     , Rangedrandom.genDouble(5, 50, ROBJ)
@@ -36,7 +34,10 @@ public class DatabasePopulator {
                     , productType[Rangedrandom.genInt(0, productType.length-1, ROBJ)]
                     , !(Rangedrandom.genInt(0,4, ROBJ) == 1))); 
         }
-        
+        return baObjArray;
+    }
+    
+    public List<Bicycle> genBikes(int desB){
         List<Bicycle> bicycleObjArray = new ArrayList<>();
         for(int y = 1; y < desB+1; ++y){
             bicycleObjArray.add(new Bicycle(y
@@ -48,15 +49,19 @@ public class DatabasePopulator {
                     , Rangedrandom.genDouble(5, 35, ROBJ)
                     , brands[Rangedrandom.genInt(0, brands.length-1, ROBJ)]));
         }
-        
-        for(BicycleAccessories ba : baObjArray){
-            //Commit to db here
-            System.out.println(ba.displayAll());
-        }
-        
-        for(Bicycle b : bicycleObjArray){
-            //Commit to db here
+        return bicycleObjArray;
+    }
+    public List<Bicycle> printBikes(int rb){
+        //Make arraylist and print values
+        List<Bicycle> bArrL = genBikes(rb);
+        for(Bicycle b : bArrL)
             System.out.println(b.displayAll());
-        }
+        return bArrL;
+    }
+    public List<BicycleAccessories> printBA(int rba){
+        List<BicycleAccessories> baArrL = genBA(rba);
+        for(BicycleAccessories ba : baArrL)
+            System.out.println(ba.displayAll());
+        return baArrL;
     }
 }
