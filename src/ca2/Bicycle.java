@@ -55,7 +55,7 @@ public class Bicycle extends Product{
                 + " | Product name: " + this.getProductName()
                 + " | Gear count: " + this.getGearCount()
                 + " | Model number: " + this.getModelNo()
-                + " | Weight: " + this.getWeight() +"kg"
+                + " | Weight: " + this.getWeight() + "kg"
                 + " | Brand: " + this.getBrand());
         return formattedReturn;
     }
