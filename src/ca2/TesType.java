@@ -5,7 +5,7 @@ package ca2;
  */
 import java.util.ArrayList;
 import java.util.List;
-//Class is soley for testing generics and does not serve a purpose in program
+//Class is soley for experimenting with generics and does not serve a purpose in program
 public class TesType<T, N>{
     T myObj;
     N myObj2;

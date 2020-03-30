@@ -12,7 +12,8 @@ public class CA2 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int userChoice = -1;
-        for (int menuControl = 0;; ++menuControl) {
+        for (int menuControl = 0;;) {
+            //MAIN MENU:
             System.out.print("\n1. Create bicycle object\n"
                     + "2. Create bicycle accessory object\n"
                     + "3. Read stored bicycle object\n"

@@ -9,8 +9,8 @@ public class BicycleAccessories extends Product{
     
     
     //Constructor
-    public BicycleAccessories(int id, double pr, String co, String pn, String ty, boolean is){
-        super(id, pr, co, pn);
+    public BicycleAccessories(int id, double pr, String co, String pn, String ty, boolean is, int strId){
+        super(id, pr, co, pn, strId);
         this.type = ty;
         this.inStock = is;
     }

@@ -8,14 +8,17 @@ public abstract class Product implements Display{
     private double price;
     private String colour, productName;
     
+    //Instance variable used for representing one to many relationship
+    private int storeId;
+    
     //Super constructor
-    public Product(int id, double pr, String co, String pn){
+    public Product(int id, double pr, String co, String pn, int sid){
         this.id = id;
         this.price = pr;
         this.colour = co;
         this.productName = pn;
+        this.storeId = sid;
     }
-    
     
     //Gets
     @Override

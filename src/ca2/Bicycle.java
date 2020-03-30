@@ -8,9 +8,18 @@ public class Bicycle extends Product{
     private double weight;
     private String brand;
     
-    //Constructor
-    public Bicycle(int id, double pr, String co, String pn, int gc, int mn, double wt, String br){
-        super(id, pr, co, pn);
+    //Constructor with id
+    public Bicycle(int id, double pr, String co, String pn, int gc, int mn, double wt, String br, int strID){
+        super(id, pr, co, pn, strID);
+        this.gearCount = gc;
+        this.modelNo = mn;
+        this.weight = wt;
+        this.brand = br;
+    }
+    
+    //Constructor without id
+    public Bicycle(double pr, String co, String pn, int gc, int mn, double wt, String br, int strId){
+        super(-1, pr, co, pn, strId);
         this.gearCount = gc;
         this.modelNo = mn;
         this.weight = wt;

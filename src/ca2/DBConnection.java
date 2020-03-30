@@ -12,7 +12,7 @@ public class DBConnection {
         String host, db, user, password;
         
         host = "localhost";
-        db = "cycleworld2";
+        db = "cycleworldca2";
         user = "root";
         password = ""; //Bad idea in a real DB, only for testing
         try {
