@@ -59,7 +59,7 @@ public class Bicycle extends Product{
     public String displayAll(){
         String formattedReturn = String.format("ID: " 
                 + this.getId() 
-                + " | Price: " + this.getPrice() 
+                + " | Price: €" + this.getPrice() 
                 + " | Colour: " + this.getColour() 
                 + " | Product name: " + this.getProductName()
                 + " | Gear count: " + this.getGearCount()
@@ -70,6 +70,6 @@ public class Bicycle extends Product{
     }
     @Override
     public String toString(){
-        return ("Bike ID: " + super.id);
+        return ("Bike ID: " + super.id + " " + this.displayAll());
     }
 }

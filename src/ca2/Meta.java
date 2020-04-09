@@ -9,9 +9,11 @@ public class Meta{
     public static void toggleDebug(){
         debug = !debug; //Flips the booleans current value
     }
+    
+    //No real reason for get/set considering it's a class variable
     public static boolean getDebugValue(){
         return debug;
-    }
+    } 
     public static void setDebugValue(boolean dbg){
         debug = dbg;
     }

@@ -30,4 +30,8 @@ public class Model {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex); //Logs SQLException with additional information
         }
     }
+    
+    public static void addBicycle(Bicycle bo){
+        
+    }
 }

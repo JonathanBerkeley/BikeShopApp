@@ -4,6 +4,7 @@ package utils;
  * @author N00181859
  */
 import java.util.Random;
+//Requires Random class object to be created & seeded by calling code
 public class Rangedrandom {
     public static int genInt(int min, int max, Random r) { //Generates pseudorandom numbers between the range of min and max
         return r.nextInt((max - min) + 1) + min;
