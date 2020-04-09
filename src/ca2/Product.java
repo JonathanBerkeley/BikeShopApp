@@ -55,4 +55,15 @@ public abstract class Product implements Display{
     public void setProductName(String pn){
         this.productName = pn;
     }
+    
+    //Non-override
+    //Gets
+    public int getStoreID(){
+        return this.storeId;
+    }
+    
+    //Sets
+    public void setStoreID(int id){
+        this.storeId = id;
+    }
 }

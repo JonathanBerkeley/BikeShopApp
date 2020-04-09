@@ -89,6 +89,12 @@ public class CA2 {
                     System.out.println("Enter store ID");
                     strID = in.nextInt();
                     in.nextLine(); //Catch newline
+                    //Checks if entered store ID exists
+                    if(!(Model.getInstance().checkStoreID(strID))){
+                        //If entered store ID doesn't exist:
+                        System.out.println("Entered store ID doesn't exist - aborting");
+                        break;
+                    }
                     System.out.println("Enter price");
                     price = in.nextDouble();
                     System.out.println("Enter weight");
@@ -100,10 +106,12 @@ public class CA2 {
                     colour = in.nextLine();
                     System.out.println("Enter product name");
                     productName = in.nextLine();
+                    //Create bicycle object with entered data
                     bo = new Bicycle(price, colour, productName, gearCount, modelNo, weight, brand, strID);
                     try {
                         System.out.println(bo);
-                        Model.addBicycle(bo);
+                        //Send bicycle object to model for entry into the database
+                        Model.getInstance().addBicycle(bo);
                     } catch (Exception fta) {
                         if (Meta.debug) {
                             System.out.println("--DEBUG-- Failed to add to DB in createObject function, except: " + fta);
@@ -112,10 +120,11 @@ public class CA2 {
                     System.out.println("Completed form - Add another?\nY/y = YES\nN/n = NO");
                     creationLoop = in.nextLine();
                 } catch (Exception badIn) {
-                    System.out.println("Bad input, please enter in correct datatype");
+                    System.out.println("Bad input to form, please enter in correct datatypes");
                     if (Meta.debug) {
                         System.out.println("--DEBUG-- Bad input in createObject function, except: " + badIn);
                     }
+                    break;
                 }
 
             }
