@@ -14,7 +14,10 @@ import utils.Rangedrandom;
 public class CA2 {
 
     public static void main(String[] args) {
+        //Scanner object for taking input from user
         Scanner in = new Scanner(System.in);
+        //Tests for connection to database before continuing
+        Model.getInstance();
         int userChoice = -1;
         //Main program i/o loop
         for (int menuControl = 0; menuControl != -1;) {
