@@ -4,12 +4,8 @@ package ca2;
  *
  * @author N00181859
  */
-import utils.DatabasePopulator;
+
 import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
-import utils.Rangedrandom;
 
 public class CA2 {
 
