@@ -22,13 +22,14 @@ public class CA2 {
         //Main program i/o loop
         for (int menuControl = 0; menuControl != -1;) {
             //MAIN MENU:
-            System.out.print("\n1. Create bicycle object\n"
-                    + "2. Create bicycle accessory object\n"
+            System.out.print("\n1. Create bicycle\n"
+                    + "2. Create bicycle accessory\n"
                     + "3. Read stored bicycle object\n"
                     + "4. Read stored bicycle accessory object\n"
                     + "5. Read product(s) by store ID\n"
                     + "6. Check existance of product by ID\n"
                     + "7. Check existance of store by ID\n"
+                    + "8. Create store\n"
                     + "15. Toggle debug mode\n"
                     + "\n0. Exit\n"
                     + "Enter selection: ");
@@ -46,12 +47,15 @@ public class CA2 {
                     createObject(in, 1);
                     break;
                 case 2:
+                    createObject(in, 2);
                     break;
                 case 3:
                     //Starts form for reading bicycle object from database by ID
-                    readBicycleObject(in);
+                    readObject(in, 1);
                     break;
                 case 4:
+                    //Starts form for reading bicycle accessories object from database by ID
+                    readObject(in, 2);
                     break;
                 case 5:
                     productsByStoreID(in);
@@ -65,6 +69,9 @@ public class CA2 {
                     System.out.println(
                             (checkExistForm(in, 1)) ? "Store exists" : "Store doesn't exist"
                     );
+                    break;
+                case 8:
+                    createObject(in, 3);
                     break;
                 case 15:
                     Meta.toggleDebug();
@@ -81,7 +88,7 @@ public class CA2 {
             }
 
         }
-        /*
+        /* This used to work but I changed things and haven't updated it yet
         DatabasePopulator dbPop = new DatabasePopulator();
         dbPop.printBA(10);
         dbPop.printBikes(20); 
@@ -138,7 +145,7 @@ public class CA2 {
                         Model.getInstance().addBicycle(bo);
                     } catch (Exception fta) {
                         if (Meta.debug) {
-                            System.out.println("--DEBUG-- Failed to add to DB in createObject function, except: " + fta);
+                            System.out.println("-DEBUG- Failed to add to DB in createObject function, except: " + fta);
                         }
                     }
                     System.out.println("Completed form - Add another?\nY/y = YES\nN/n = NO");
@@ -153,35 +160,161 @@ public class CA2 {
 
             }
         } else if (stream == 2) { //For bicycle accessory
+            //Controls menu loop
+            String creationLoop = "";
+            //Variables for bicycle accessory object
+            BicycleAccessories ba;
+            int strID;
+            double price;
+            String colour, productName, baType;
+            boolean inStock;
+            //Loop creation form until user stops it
+            while (!(creationLoop.equalsIgnoreCase("n"))) {
+                try {
+                    System.out.println("Enter store ID");
+                    strID = in.nextInt();
+                    in.nextLine(); //Catch newline
+                    //Checks if entered store ID exists
+                    if (!(Model.getInstance().checkStoreID(strID))) {
+                        //If entered store ID doesn't exist:
+                        System.out.println("Entered store ID doesn't exist - aborting");
+                        break;
+                    }
+                    System.out.println("Enter product name");
+                    productName = in.nextLine();
+                    System.out.println("Enter colour");
+                    colour = in.nextLine();
+                    System.out.println("Enter price");
+                    price = in.nextDouble();
+                    in.nextLine(); //Catches newline
+                    System.out.println("Enter bicycle accessory type");
+                    baType = in.nextLine();
+                    System.out.println("Is " + productName + " in stock? \n(Y/y = YES N/n = NO)");
+                    String tempStockChk = in.nextLine();
+                    if (tempStockChk.equalsIgnoreCase("Y")) {
+                        inStock = true;
+                    } else if (tempStockChk.equalsIgnoreCase("N")) {
+                        inStock = false;
+                    } else {
+                        throw new Exception("Bad input");
+                    }
+                    //Create bicycle accessory object with entered data
+                    ba = new BicycleAccessories(price, colour, productName, baType, inStock, strID);
+                    try {
+                        //displayAll is a polymorphic example, changes behaviour depending on object
+                        System.out.println(ba.displayAll());
+                        //Send bicycleaccessories object to model for entry into the database
+                        Model.getInstance().addBicycleAccessory(ba);
+                    } catch (Exception fta) {
+                        if (Meta.debug) {
+                            System.out.println("-DEBUG- Failed to add to DB in createObject function, except: " + fta);
+                        }
+                    }
+                    System.out.println("Completed form - Add another?\nY/y = YES\nN/n = NO");
+                    creationLoop = in.nextLine();
+                } catch (Exception badIn) {
+                    System.out.println("Bad input to form, please enter in correct datatypes");
+                    if (Meta.debug) {
+                        System.out.println("-DEBUG- Bad input in createObject function, except: " + badIn);
+                    }
+                    break;
+                }
+            }
+        } else if (stream == 3) { //For store creation
+            in.nextLine(); //Catches newline
+            //Controls menu loop
+            String creationLoop = "";
+            Store str;
+            String storeName, storeAddress;
+            //Loop creation form until user stops it
+            while (!(creationLoop.equalsIgnoreCase("n"))) {
+                try {
 
+                    System.out.println("Enter store name: ");
+                    storeName = in.nextLine();
+                    System.out.println("Enter store address: ");
+                    storeAddress = in.nextLine();
+
+                    //Create store object with entered data
+                    str = new Store(storeName, storeAddress);
+                    try {
+                        //displayAll is a polymorphic example, changes behaviour depending on object
+                        System.out.println(str.displayAll());
+                        //Send store object to model for entry into the database
+                        //Return value from model is never used, checking for success
+                        //is instead done in MainTableGateway
+                        Model.getInstance().addStore(str);
+                    } catch (Exception fta) {
+                        if (Meta.debug) {
+                            System.out.println("-DEBUG- Failed to add to DB in createObject function, except: " + fta);
+                        }
+                    }
+                    System.out.println("Completed form - Add another?\nY/y = YES\nN/n = NO");
+                    creationLoop = in.nextLine();
+                } catch (Exception badIn) {
+                    System.out.println("Bad input to form, please enter in correct datatypes");
+                    if (Meta.debug) {
+                        System.out.println("-DEBUG- Bad input in createObject function, except: " + badIn);
+                    }
+                    break;
+                }
+            }
         }
     }
 
     //This function is for retrieving and displaying bicycle object data from database
-    public static void readBicycleObject(Scanner in) {
+    public static void readObject(Scanner in, int stream) {
         String readLoop = "";
         int readID;
-        while (!(readLoop.equalsIgnoreCase("n"))) {
-            try {
-                System.out.println("Enter ID of bicycle object to view data for");
-                readID = in.nextInt();
-                in.nextLine(); //Absorbs newline character
-                Bicycle bo = Model.getInstance().readBicycleObj(readID);
-                //Checks for existance first, then outputs the bicycle data
-                if (bo == null) {
-                    System.out.println("Supplied ID was not found in database");
-                } else {
-                    System.out.println(bo);
+        if (stream == 1) {
+            while (!(readLoop.equalsIgnoreCase("n"))) {
+                try {
+                    System.out.println("Enter ID to view bicycle data for");
+                    readID = in.nextInt();
+                    in.nextLine(); //Absorbs newline character
+                    Bicycle bo = Model.getInstance().readBicycleObj(readID);
+                    //Checks for existance first, then outputs the bicycle data
+                    if (bo == null) {
+                        System.out.println("Supplied ID was not found in database");
+                    } else {
+                        //Uses toString which uses displayAll function
+                        System.out.println(bo);
+                    }
+                    //Check if user wants to go again, any input other than n with continue
+                    System.out.println("Completed form - Go again?\nY/y = YES\nN/n = NO");
+                    readLoop = in.nextLine();
+                } catch (Exception badIn) {
+                    System.out.println("Bad input! Please enter correct datatypes");
+                    if (Meta.debug) {
+                        System.out.println("-DEBUG- Bad input in readObject function, except: " + badIn);
+                    }
+                    break;
                 }
-                //Check if user wants to go again, any input other than n with continue
-                System.out.println("Completed form - Go again?\nY/y = YES\nN/n = NO");
-                readLoop = in.nextLine();
-            } catch (Exception badIn) {
-                System.out.println("Bad input! Please enter correct datatypes");
-                if (Meta.debug) {
-                    System.out.println("-DEBUG- Bad input in readObject function, except: " + badIn);
+            }
+        } else if (stream == 2) {
+            while (!(readLoop.equalsIgnoreCase("n"))) {
+                try {
+                    System.out.println("Enter ID to view bicycle accessories data for");
+                    readID = in.nextInt();
+                    in.nextLine(); //Absorbs newline character
+                    BicycleAccessories ba = Model.getInstance().readBAObj(readID);
+                    //Checks for existance first, then outputs the bicycle data
+                    if (ba == null) {
+                        System.out.println("Supplied ID was not found in database");
+                    } else {
+                        //Uses toString which uses displayAll function
+                        System.out.println(ba);
+                    }
+                    //Check if user wants to go again, any input other than n with continue
+                    System.out.println("Completed form - Go again?\nY/y = YES\nN/n = NO");
+                    readLoop = in.nextLine();
+                } catch (Exception badIn) {
+                    System.out.println("Bad input! Please enter correct datatypes");
+                    if (Meta.debug) {
+                        System.out.println("-DEBUG- Bad input in readObject function, except: " + badIn);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

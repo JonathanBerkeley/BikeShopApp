@@ -76,6 +76,6 @@ public class Bicycle extends Product{
     }
     @Override
     public String toString(){
-        return ("Bike ID: " + super.id + " " + this.displayAll());
+        return ("ID: " + super.id + " " + this.displayAll());
     }
 }

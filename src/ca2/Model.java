@@ -51,6 +51,41 @@ public class Model {
         return boWithId != null;
     }
 
+    //Handles data coming from form, sends it to gateway for insertion to database
+    public boolean addBicycleAccessory(BicycleAccessories ba) {
+        BicycleAccessories baWithId = null;
+        try {
+            //Passed object data is unpacked into the gateway here
+            baWithId = this.gateway.insertBicycleAccessory(
+                    ba.getPrice(), ba.getColour(), ba.getProductName(),
+                    ba.getType(), ba.getInStock(), ba.getStoreID()
+            );
+        } catch (SQLException ex) {
+            if (Meta.debug) {
+                System.out.println("-DEBUG- SQLException in addBicycle function, except: " + ex);
+            }
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return baWithId != null;
+    }
+
+    //For adding a store to the database
+    public boolean addStore(Store str) {
+        Store strWithID = null;
+        try {
+            //Passed object data is unpacked into the gateway here
+            strWithID = this.gateway.insertStore(
+                    str.getStoreName(), str.getStoreAddress()
+            );
+        } catch (SQLException ex) {
+            if (Meta.debug) {
+                System.out.println("-DEBUG- SQLException in addBicycle function, except: " + ex);
+            }
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return strWithID != null;
+    }
+
     public Bicycle readBicycleObj(int bID) {
         Bicycle bo = null;
         try {
@@ -65,6 +100,22 @@ public class Model {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return bo;
+    }
+    
+    public BicycleAccessories readBAObj(int bID) {
+        BicycleAccessories ba = null;
+        try {
+            //Checks if bicycle accessory exists first, then tries read the data
+            if (this.gateway.checkProductExist(bID)) {
+                ba = this.gateway.readBicycleAccessory(bID);
+            }
+        } catch (SQLException sqle) {
+            if (Meta.debug) {
+                System.out.println("-DEBUG- SQLException in readBAObj function, except: " + sqle);
+            }
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, sqle);
+        }
+        return ba;
     }
 
     //For one to many read by ID

@@ -21,6 +21,12 @@ public class Store implements Display {
         this.productList = sl;
     }
 
+    public Store(int id, String sn, String sa) {
+        this.storeID = id;
+        this.storeName = sn;
+        this.storeAddress = sa;
+    }
+
     public Store(String sn, String sa, List<Product> sl) {
         this.storeName = sn;
         this.storeAddress = sa;
@@ -95,7 +101,6 @@ public class Store implements Display {
     public void setProductList(List<Product> sl) {
         this.productList = sl;
     }
-
 
     @Override
     public String displayAll() {
