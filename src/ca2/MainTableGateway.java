@@ -111,6 +111,24 @@ public class MainTableGateway {
         return bl.get(0);
     }
 
+    //Function for getting all products of a store by ID
+    public Store allStoreProducts(int dID) throws SQLException {
+        //Query to get the referenced store
+        String query = "SELECT * FROM " + TABLE_STORE
+                + " WHERE " + COLUMN_STORE_ID
+                + " = " + dID;
+        //Query to get that stores products
+        String query2 = "SELECT * FROM " + TABLE_PRODUCT
+                + " WHERE " + COLUMN_P_STORE_ID
+                + " = " + dID;
+        Statement stmt = mConnection.prepareStatement(query);
+        Statement stmt2 = mConnection.prepareStatement(query2);
+        ResultSet rs = stmt.executeQuery(query);
+        ResultSet rs2 = stmt.executeQuery(query2);
+
+        return null;
+    }
+
     //Function to check if store exists in database
     public boolean checkStoreExist(int sID) {
         PreparedStatement stmt;
@@ -187,6 +205,49 @@ public class MainTableGateway {
                 bicycleList.add(bo);
             }
             return bicycleList; //Return all the objects created
+        } catch (SQLException ex) {
+            if (Meta.debug) {
+                System.out.println("-Debug- Exception caught in MainTableGateway.formatResultSet: " + ex);
+            }
+            System.out.println("Something went wrong formatting entries from database");
+        }
+        return null;
+    }
+
+    //Formats product data into respective java objects
+    private List<Product> formatProductResultSet(ResultSet rs) {
+        List<Product> pl;
+        
+        //Product variables (Shared by both products)
+        int id, storeID;
+        double price;
+        String colour, productName;
+        
+        //Bicycle specific variables
+        int gearCount, modelNo;
+        double weight;
+        String brand;
+        
+        //Bicycle Accessory specific variables
+        String baType;
+        boolean inStock;
+        
+        try {
+            while (rs.next()) { //Parses resultset data and creates objects on a loop, until resultset is out of rows
+                id = rs.getInt(COLUMN_PRODUCT_ID);
+                price = rs.getDouble(COLUMN_PRICE);
+                colour = rs.getString(COLUMN_COLOUR);
+                productName = rs.getString(COLUMN_PRODUCT_NAME);
+                storeID = rs.getInt(COLUMN_P_STORE_ID);
+                //type = rs.getString(COLUMN_TYPE);
+                gearCount = rs.getInt(COLUMN_GEAR_COUNT);
+                modelNo = rs.getInt(COLUMN_MODEL_NO);
+                weight = rs.getDouble(COLUMN_WEIGHT);
+                brand = rs.getString(COLUMN_BRAND);
+                //bo = new Bicycle(id, price, colour, productName, gearCount, modelNo, weight, brand, storeID);
+                //bicycleList.add(bo);
+            }
+            //return bicycleList; //Return all the objects created
         } catch (SQLException ex) {
             if (Meta.debug) {
                 System.out.println("-Debug- Exception caught in MainTableGateway.formatResultSet: " + ex);

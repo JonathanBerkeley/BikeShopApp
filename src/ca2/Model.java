@@ -43,6 +43,9 @@ public class Model {
                     bo.getColour(), bo.getPrice(), bo.getProductName(), bo.getStoreID()
             );
         } catch (SQLException ex) {
+            if (Meta.debug) {
+                System.out.println("-DEBUG- SQLException in addBicycle function, except: " + ex);
+            }
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
         return boWithId != null;
@@ -56,21 +59,31 @@ public class Model {
                 bo = this.gateway.readBicycle(bID);
             }
         } catch (SQLException sqle) {
+            if (Meta.debug) {
+                System.out.println("-DEBUG- SQLException in readBicycleObj function, except: " + sqle);
+            }
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return bo;
     }
-    
+
     //For one to many read by ID
-    public void getStoresProducts(int dID){
-        
+    public void getStoresProducts(int dID) {
+        try {
+            this.gateway.allStoreProducts(dID);
+        } catch (SQLException sqle) {
+            if (Meta.debug) {
+                System.out.println("-DEBUG- SQLException in getStoresProducts function, except: " + sqle);
+            }
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, sqle);
+        }
     }
-    
+
     //Returns true if store with supplied ID exists
     public boolean checkStoreID(int sID) {
         return this.gateway.checkStoreExist(sID);
     }
-    
+
     //Returns true if product with supplied ID exists
     public boolean checkProductID(int pID) {
         return this.gateway.checkProductExist(pID);
