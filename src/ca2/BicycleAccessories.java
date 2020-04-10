@@ -32,11 +32,17 @@ public class BicycleAccessories extends Product{
     }
     
     //Overrides:
+    
+    //Polymorphic functions here change behavior depending 
+    //on objects implementation. For example, this displayAll function
+    //displays all data relevant to this object.
+    //Bicycle class has an alternative implementation of this function
+    //which displays all data relevant to that object.
     @Override
     public String displayAll(){
         String formattedReturn = String.format("ID: " 
                 + this.getId() 
-                + " | Price: " + this.getPrice() 
+                + " | Price: €" + this.getPrice() 
                 + " | Colour: " + this.getColour() 
                 + " | Product name: " + this.getProductName()
                 + " | Product type: " + this.getType()
@@ -45,6 +51,6 @@ public class BicycleAccessories extends Product{
     }
     @Override
     public String toString(){
-        return ("Bicycle accessories ID: " + super.id);
+        return ("Bicycle accessories ID: " + super.id + " " + this.displayAll());
     }
 }

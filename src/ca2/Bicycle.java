@@ -55,6 +55,12 @@ public class Bicycle extends Product{
     }
     
     //Overrides:
+    
+    //Polymorphic functions here change behavior depending 
+    //on objects implementation. For example, this displayAll function
+    //displays all data relevant to this object.
+    //BicycleAccessories class has an alternative implementation of this function
+    //which displays all data relevant to that object.
     @Override
     public String displayAll(){
         String formattedReturn = String.format("ID: " 

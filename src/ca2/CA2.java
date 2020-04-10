@@ -27,6 +27,8 @@ public class CA2 {
                     + "3. Read stored bicycle object\n"
                     + "4. Read stored bicycle accessory object\n"
                     + "5. Read product by store ID\n"
+                    + "6. Check existance of product by ID\n"
+                    + "7. Check existance of store by ID\n"
                     + "15. Toggle debug mode\n"
                     + "\n0. Exit\n"
                     + "Enter selection: ");
@@ -37,6 +39,8 @@ public class CA2 {
             }
             //Switch statement checks user choice against different valid entries
             switch (userChoice) {
+                case 0:
+                    break;
                 case 1:
                     //Starts form for creating bicycle object
                     createObject(in, 1);
@@ -44,8 +48,22 @@ public class CA2 {
                 case 2:
                     break;
                 case 3:
+                    //Starts form for reading bicycle object from database by ID
+                    readBicycleObject(in);
                     break;
                 case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    System.out.println(
+                            (checkExistForm(in, 2)) ? "Product exists" : "Product doesn't exist"
+                    );
+                    break;
+                case 7:
+                    System.out.println(
+                            (checkExistForm(in, 1)) ? "Store exists" : "Store doesn't exist"
+                    );
                     break;
                 case 15:
                     Meta.toggleDebug();
@@ -81,6 +99,7 @@ public class CA2 {
             int gearCount, modelNo, strID;
             double price, weight;
             String brand, colour, productName;
+            //Loop creation form until user stops it
             while (!(creationLoop.equalsIgnoreCase("n"))) {
                 try {
                     System.out.println("Enter gear count");
@@ -93,7 +112,7 @@ public class CA2 {
                     strID = in.nextInt();
                     in.nextLine(); //Catch newline
                     //Checks if entered store ID exists
-                    if(!(Model.getInstance().checkStoreID(strID))){
+                    if (!(Model.getInstance().checkStoreID(strID))) {
                         //If entered store ID doesn't exist:
                         System.out.println("Entered store ID doesn't exist - aborting");
                         break;
@@ -112,7 +131,8 @@ public class CA2 {
                     //Create bicycle object with entered data
                     bo = new Bicycle(price, colour, productName, gearCount, modelNo, weight, brand, strID);
                     try {
-                        System.out.println(bo);
+                        //displayAll is a polymorphic example, changes behaviour depending on object
+                        System.out.println(bo.displayAll());
                         //Send bicycle object to model for entry into the database
                         Model.getInstance().addBicycle(bo);
                     } catch (Exception fta) {
@@ -134,6 +154,56 @@ public class CA2 {
         } else if (stream == 2) { //For bicycle accessory
 
         }
+    }
+
+    //This function is for retrieving and displaying bicycle object data from database
+    public static void readBicycleObject(Scanner in) {
+        String readLoop = "";
+        int readID;
+        while (!(readLoop.equalsIgnoreCase("n"))) {
+            try {
+                System.out.println("Enter ID of bicycle object to view data for");
+                readID = in.nextInt();
+                in.nextLine(); //Absorbs newline character
+                Bicycle bo = Model.getInstance().readBicycleObj(readID);
+                //Checks for existance first, then outputs the bicycle data
+                if (bo == null) {
+                    System.out.println("Supplied ID was not found in database");
+                } else {
+                    System.out.println(bo);
+                }
+                //Check if user wants to go again, any input other than n with continue
+                System.out.println("Completed form - Go again?\nY/y = YES\nN/n = NO");
+                readLoop = in.nextLine();
+            } catch (Exception badIn) {
+                System.out.println("Bad input! Please enter correct datatypes");
+                if (Meta.debug) {
+                    System.out.println("--DEBUG-- Bad input in readObject function, except: " + badIn);
+                }
+                break;
+            }
+
+        }
+    }
+
+    //Returns true if ID exists in database, false if not
+    public static boolean checkExistForm(Scanner in, int stream) {
+        try {
+            //Streams function into two channels to avoid needing to rewrite more code
+            if (stream == 1) {
+                System.out.println("Enter ID to check if a store exists with that ID:");
+                return Model.getInstance().checkStoreID(in.nextInt());
+            } else if (stream == 2) {
+                System.out.println("Enter ID to check if a product exists with that ID:");
+                return Model.getInstance().checkProductID(in.nextInt());
+            }
+        } catch (Exception ex) {
+            if (Meta.debug) {
+                System.out.println("-Debug- Exception in function checkExistForm " + ex);
+            }
+            System.out.println("Bad input! Ensure datatype correct and retry.");
+        }
+        return false;
     }
 
 }

@@ -48,8 +48,26 @@ public class Model {
         return boWithId != null;
     }
 
-    //Returns true if exists
+    public Bicycle readBicycleObj(int bID) {
+        Bicycle bo = null;
+        try {
+            //Checks if bicycle exists first, then tries read the data
+            if (this.gateway.checkProductExist(bID)) {
+                bo = this.gateway.readBicycle(bID);
+            }
+        } catch (SQLException sqle) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, sqle);
+        }
+        return bo;
+    }
+
+    //Returns true if store with supplied ID exists
     public boolean checkStoreID(int sID) {
         return this.gateway.checkStoreExist(sID);
+    }
+    
+    //Returns true if product with supplied ID exists
+    public boolean checkProductID(int pID) {
+        return this.gateway.checkProductExist(pID);
     }
 }

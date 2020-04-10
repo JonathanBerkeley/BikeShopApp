@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainTableGateway {
 
@@ -96,6 +98,19 @@ public class MainTableGateway {
         return b; //Returns the bicycle object to caller
     }
 
+    //Reads bicycle object data with given ID from database if it exists.
+    //Returns null bicycle object if it doesn't
+    public Bicycle readBicycle(int bID) throws SQLException {
+        Bicycle bo = null;
+        String query = "SELECT * FROM " + TABLE_PRODUCT
+                + " WHERE " + COLUMN_PRODUCT_ID
+                + " = " + bID;
+        PreparedStatement stmt = mConnection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
+        List<Bicycle> bl = formatResultSet(rs);
+        return bl.get(0);
+    }
+
     //Function to check if store exists in database
     public boolean checkStoreExist(int sID) {
         PreparedStatement stmt;
@@ -116,9 +131,68 @@ public class MainTableGateway {
             }
         } catch (SQLException sqle) {
             if (Meta.debug) {
-                System.out.println("-Debug- Acceptable exception in function checkExist " + sqle);
+                System.out.println("-Debug- Acceptable exception in function checkStoreExist " + sqle);
             }
         }
         return false;
+    }
+
+    //Function to check if product exists in database, very similar to store check function
+    public boolean checkProductExist(int pID) {
+        PreparedStatement stmt;
+        String query;
+        ResultSet rs;
+        //Basic query, it's irrelevant what the query is, it just uses the supplied ID
+        //If the ID doesn't exist, there will be no rows in the result set
+        //If the ID does exist, there will be a row in the result set
+        query = "SELECT " + COLUMN_PRODUCT_ID + " FROM "
+                + TABLE_PRODUCT + " WHERE " + COLUMN_PRODUCT_ID
+                + " = " + pID;
+        try {
+            stmt = mConnection.prepareStatement(query);
+            rs = stmt.executeQuery();
+            //Move virtual cursor to first row in result set, will fail if ID doesn't exist
+            if (rs.absolute(1)) {
+                return true;
+            }
+        } catch (SQLException sqle) {
+            if (Meta.debug) {
+                System.out.println("-Debug- Acceptable exception in function checkProductExist " + sqle);
+            }
+        }
+        return false;
+    }
+
+    //Private functions ::
+    //Formats result set data into java objects, code based on my previous C.A code.
+    private List<Bicycle> formatResultSet(ResultSet rs) throws SQLException { //Based on sample code, parses resultset data
+        List<Bicycle> bicycleList = new ArrayList<>();
+        int id, modelNo, gearCount, storeID;
+        double weight, price;
+        String productName, brand, colour, type;
+        Bicycle bo;
+        try {
+            while (rs.next()) { //Parses resultset data and creates objects on a loop, until resultset is out of rows
+                id = rs.getInt(COLUMN_PRODUCT_ID);
+                price = rs.getDouble(COLUMN_PRICE);
+                colour = rs.getString(COLUMN_COLOUR);
+                productName = rs.getString(COLUMN_PRODUCT_NAME);
+                storeID = rs.getInt(COLUMN_P_STORE_ID);
+                type = rs.getString(COLUMN_TYPE);
+                gearCount = rs.getInt(COLUMN_GEAR_COUNT);
+                modelNo = rs.getInt(COLUMN_MODEL_NO);
+                weight = rs.getDouble(COLUMN_WEIGHT);
+                brand = rs.getString(COLUMN_BRAND);
+                bo = new Bicycle(id, price, colour, productName, gearCount, modelNo, weight, brand, storeID);
+                bicycleList.add(bo);
+            }
+            return bicycleList; //Return all the objects created
+        } catch (SQLException ex) {
+            if (Meta.debug) {
+                System.out.println("-Debug- Exception caught in MainTableGateway.formatResultSet: " + ex);
+            }
+            System.out.println("Something went wrong formatting entries from database");
+        }
+        return null;
     }
 }
