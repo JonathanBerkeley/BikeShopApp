@@ -113,20 +113,33 @@ public class MainTableGateway {
 
     //Function for getting all products of a store by ID
     public Store allStoreProducts(int dID) throws SQLException {
+        List<Product> productList;
+
         //Query to get the referenced store
         String query = "SELECT * FROM " + TABLE_STORE
                 + " WHERE " + COLUMN_STORE_ID
                 + " = " + dID;
+        Statement stmt = mConnection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery(query);
+        
+        //Unpacks result set data into store object
+        Store str = formatStoreResultSet(rs);
+        
         //Query to get that stores products
         String query2 = "SELECT * FROM " + TABLE_PRODUCT
                 + " WHERE " + COLUMN_P_STORE_ID
                 + " = " + dID;
-        Statement stmt = mConnection.prepareStatement(query);
         Statement stmt2 = mConnection.prepareStatement(query2);
-        ResultSet rs = stmt.executeQuery(query);
         ResultSet rs2 = stmt.executeQuery(query2);
 
-        return null;
+        //Unpacks the result set data into objects, then adds them to an arraylist
+        productList = formatProductResultSet(rs2);
+
+        //Sets product list to that store
+        str.setProductList(productList);
+        
+        //Returns store to caller
+        return str;
     }
 
     //Function to check if store exists in database
@@ -214,24 +227,57 @@ public class MainTableGateway {
         return null;
     }
 
+    //Formats store result set into java object
+    private Store formatStoreResultSet(ResultSet rs) {
+        Store str = null;
+
+        //Variable representation of object data
+        int id;
+        String storeName, storeAddress;
+        List<Product> pl = null;
+
+        try {
+            while (rs.next()) { //Parses resultset data and creates objects on a loop, until resultset is out of rows
+                id = rs.getInt(COLUMN_STORE_ID);
+                storeName = rs.getString(COLUMN_NAME);
+                storeAddress = rs.getString(COLUMN_STORE_ADDRESS);
+                //Creates store object with unpacked data and empty product arraylist
+                str = new Store(id, storeName, storeAddress, pl);
+            }
+        } catch (SQLException ex) {
+            if (Meta.debug) {
+                System.out.println("-Debug- Exception caught in MainTableGateway.formatStoreResultSet: " + ex);
+            }
+            System.out.println("Something went wrong formatting entries from database");
+        }
+        return str;
+    }
+
     //Formats product data into respective java objects
     private List<Product> formatProductResultSet(ResultSet rs) {
-        List<Product> pl;
-        
+        List<Product> pl = new ArrayList<>();
+
+        //Objects
+        Bicycle bo;
+        BicycleAccessories ba;
+
+        //This variable is used to determine which subclass it is
+        String type;
+
         //Product variables (Shared by both products)
         int id, storeID;
         double price;
         String colour, productName;
-        
+
         //Bicycle specific variables
         int gearCount, modelNo;
         double weight;
         String brand;
-        
+
         //Bicycle Accessory specific variables
         String baType;
         boolean inStock;
-        
+
         try {
             while (rs.next()) { //Parses resultset data and creates objects on a loop, until resultset is out of rows
                 id = rs.getInt(COLUMN_PRODUCT_ID);
@@ -239,18 +285,25 @@ public class MainTableGateway {
                 colour = rs.getString(COLUMN_COLOUR);
                 productName = rs.getString(COLUMN_PRODUCT_NAME);
                 storeID = rs.getInt(COLUMN_P_STORE_ID);
-                //type = rs.getString(COLUMN_TYPE);
-                gearCount = rs.getInt(COLUMN_GEAR_COUNT);
-                modelNo = rs.getInt(COLUMN_MODEL_NO);
-                weight = rs.getDouble(COLUMN_WEIGHT);
-                brand = rs.getString(COLUMN_BRAND);
-                //bo = new Bicycle(id, price, colour, productName, gearCount, modelNo, weight, brand, storeID);
-                //bicycleList.add(bo);
+                type = rs.getString(COLUMN_TYPE);
+                if (type.equals("bicycle")) {
+                    gearCount = rs.getInt(COLUMN_GEAR_COUNT);
+                    modelNo = rs.getInt(COLUMN_MODEL_NO);
+                    weight = rs.getDouble(COLUMN_WEIGHT);
+                    brand = rs.getString(COLUMN_BRAND);
+                    bo = new Bicycle(id, price, colour, productName, gearCount, modelNo, weight, brand, storeID);
+                    pl.add(bo);
+                } else if (type.equals("bicycle accessory")) {
+                    baType = rs.getString(COLUMN_BA_TYPE);
+                    inStock = rs.getBoolean(COLUMN_IN_STOCK);
+                    ba = new BicycleAccessories(id, price, colour, productName, baType, inStock, storeID);
+                    pl.add(ba);
+                }
             }
-            //return bicycleList; //Return all the objects created
+            return pl; //Return all the objects created in an arraylist
         } catch (SQLException ex) {
             if (Meta.debug) {
-                System.out.println("-Debug- Exception caught in MainTableGateway.formatResultSet: " + ex);
+                System.out.println("-Debug- Exception caught in MainTableGateway.formatProductResultSet: " + ex);
             }
             System.out.println("Something went wrong formatting entries from database");
         }

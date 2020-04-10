@@ -3,7 +3,7 @@ package ca2;
  *
  * @author N00181859
  */
-public abstract class Product implements Display{
+public abstract class Product implements Display, GetSets{
     protected int id;
     private double price;
     private String colour, productName;

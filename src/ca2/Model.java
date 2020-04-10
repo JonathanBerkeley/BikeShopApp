@@ -68,15 +68,17 @@ public class Model {
     }
 
     //For one to many read by ID
-    public void getStoresProducts(int dID) {
+    public Store getStoresProducts(int dID) {
+        Store str = null;
         try {
-            this.gateway.allStoreProducts(dID);
+            str = this.gateway.allStoreProducts(dID);
         } catch (SQLException sqle) {
             if (Meta.debug) {
                 System.out.println("-DEBUG- SQLException in getStoresProducts function, except: " + sqle);
             }
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, sqle);
         }
+        return str;
     }
 
     //Returns true if store with supplied ID exists

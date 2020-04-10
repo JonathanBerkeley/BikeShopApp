@@ -189,11 +189,19 @@ public class CA2 {
     //Gets the products at store by ID
     public static void productsByStoreID(Scanner in) {
         int dID;
+        Store storeObj;
         try {
             System.out.println("Enter store ID to display products of:");
             dID = in.nextInt();
             in.nextLine(); //Catches newline character
-            Model.getInstance().getStoresProducts(dID);
+
+            //Checks if that id is a valid store
+            if (Model.getInstance().checkStoreID(dID)) {
+                storeObj = Model.getInstance().getStoresProducts(dID);
+                System.out.println(storeObj.displayAll());
+            } else {
+                System.out.println("Couldn't find a store with that ID. Aborting");
+            }
         } catch (Exception badIn) {
             System.out.println("Bad input! Please enter correct datatypes");
             if (Meta.debug) {
