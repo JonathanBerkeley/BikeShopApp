@@ -60,7 +60,12 @@ public class Model {
         }
         return bo;
     }
-
+    
+    //For one to many read by ID
+    public void getStoresProducts(int dID){
+        
+    }
+    
     //Returns true if store with supplied ID exists
     public boolean checkStoreID(int sID) {
         return this.gateway.checkStoreExist(sID);

@@ -26,7 +26,7 @@ public class CA2 {
                     + "2. Create bicycle accessory object\n"
                     + "3. Read stored bicycle object\n"
                     + "4. Read stored bicycle accessory object\n"
-                    + "5. Read product by store ID\n"
+                    + "5. Read product(s) by store ID\n"
                     + "6. Check existance of product by ID\n"
                     + "7. Check existance of store by ID\n"
                     + "15. Toggle debug mode\n"
@@ -54,6 +54,7 @@ public class CA2 {
                 case 4:
                     break;
                 case 5:
+                    productsByStoreID(in);
                     break;
                 case 6:
                     System.out.println(
@@ -145,7 +146,7 @@ public class CA2 {
                 } catch (Exception badIn) {
                     System.out.println("Bad input to form, please enter in correct datatypes");
                     if (Meta.debug) {
-                        System.out.println("--DEBUG-- Bad input in createObject function, except: " + badIn);
+                        System.out.println("-DEBUG- Bad input in createObject function, except: " + badIn);
                     }
                     break;
                 }
@@ -178,11 +179,26 @@ public class CA2 {
             } catch (Exception badIn) {
                 System.out.println("Bad input! Please enter correct datatypes");
                 if (Meta.debug) {
-                    System.out.println("--DEBUG-- Bad input in readObject function, except: " + badIn);
+                    System.out.println("-DEBUG- Bad input in readObject function, except: " + badIn);
                 }
                 break;
             }
+        }
+    }
 
+    //Gets the products at store by ID
+    public static void productsByStoreID(Scanner in) {
+        int dID;
+        try {
+            System.out.println("Enter store ID to display products of:");
+            dID = in.nextInt();
+            in.nextLine(); //Catches newline character
+            Model.getInstance().getStoresProducts(dID);
+        } catch (Exception badIn) {
+            System.out.println("Bad input! Please enter correct datatypes");
+            if (Meta.debug) {
+                System.out.println("-DEBUG- Exception in productsByStoreID function: " + badIn);
+            }
         }
     }
 
@@ -199,7 +215,7 @@ public class CA2 {
             }
         } catch (Exception ex) {
             if (Meta.debug) {
-                System.out.println("-Debug- Exception in function checkExistForm " + ex);
+                System.out.println("-DEBUG- Exception in function checkExistForm " + ex);
             }
             System.out.println("Bad input! Ensure datatype correct and retry.");
         }

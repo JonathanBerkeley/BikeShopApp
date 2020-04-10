@@ -10,6 +10,10 @@ import java.util.Random;
  *
  * @author N00181859
  */
+
+
+//THIS IS OUTDATED -- it only creates local representations
+//and has not been updated for the 1 - many database
 public class DatabasePopulator {
 
     //Random object
@@ -60,6 +64,7 @@ public class DatabasePopulator {
         //Make arraylist and print values
         List<Bicycle> bArrL = genBikes(rb);
         for (Bicycle b : bArrL) {
+            //Polymorphism a
             System.out.println(b.displayAll());
         }
         return bArrL;
@@ -68,6 +73,7 @@ public class DatabasePopulator {
     public List<BicycleAccessories> printBA(int rba) {
         List<BicycleAccessories> baArrL = genBA(rba);
         for (BicycleAccessories ba : baArrL) {
+            //Polymorphism b
             System.out.println(ba.displayAll());
         }
         return baArrL;
